@@ -1,0 +1,14 @@
+
+- open node bamazoncustomer.js 
+    -the table showing everything from sql shows up
+        -- the product id, product name, and price
+
+    -it askes you 'want to make a order?'   --which item from the list do you want to order
+    
+    -next asks 'how many of the product you want to buy?'
+
+    -the table will show up again with a new box showing 'product, how many were brought, and the total price'
+        --in sql the quantity of that item will decrese
+
+    
+
