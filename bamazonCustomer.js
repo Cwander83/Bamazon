@@ -72,13 +72,11 @@ function start() {
                 connection.query('SELECT name, stock_quantity, price FROM orders WHERE id = ?', [
                     answer.id
                 ], function (err, res) {
-                    for (let i = 0; i > res.length; i++) {
-                        let
-                    }
                     console.log('----------------------------');
-                    console.log(`name: ${id.name}`);
-                    console.log(`id of product: ${answer.id}`);
-                    console.log(`quantity of purchase: ${answer.quantitySold}`);
+                    console.log(`name: ${res[0].name}`);
+                    //console.log(`id of product: ${answer.id}`);
+                    console.log(`You have purchased: ${answer.quantitySold} unit`);
+                    console.log('total cost: $' + answer.quantitySold * res[0].price);
                     console.log('----------------------------');
                     console.table(myTable);
                     myTable();
