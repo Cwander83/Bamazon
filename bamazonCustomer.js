@@ -32,7 +32,6 @@ function myTable() {
             newRow.id = element.id;
             newRow.name = element.name;
             newRow.price = element.price;
-            newRow.stock_quantity = element.stock_quantity;
             myTable.push(newRow);
         });
         console.table(myTable);
@@ -43,7 +42,7 @@ function myTable() {
 function start() {
     console.log('\n  **  WELCOME TO BAMAZON  **\n');
     console.log('HOME OF ALL YOUR TERMINAL SHOPPING NEEDS\n');
-    connection.query("SELECT * FROM orders", (err, res) => {
+    connection.query("SELECT * FROM orders WHERE stock_quantity > 0", (err, res) => {
         if (err) throw err;
         // Log all results of the SELECT statement
 
@@ -70,28 +69,20 @@ function start() {
                 }
             ])
             .then((answer) => {
-                purchase(answer.id, answer.quantitySold);
+                connection.query('SELECT name, stock_quantity, price FROM orders WHERE id = ?', [
+                    answer.id
+                ], function (err, res) {
+                    for (let i = 0; i > res.length; i++) {
+                        let
+                    }
+                    console.log('----------------------------');
+                    console.log(`name: ${id.name}`);
+                    console.log(`id of product: ${answer.id}`);
+                    console.log(`quantity of purchase: ${answer.quantitySold}`);
+                    console.log('----------------------------');
+                    console.table(myTable);
+                    myTable();
+                })
             });
     });
 };
-
-
-
-function purchase(id, quantitySold, name) {
-    let query = 'SELECT * FROM orders WHERE ?';
-    connection.query(query, {
-        
-        item_id: id
-    }, function (err, res) {
-        console.log('----------------------------');
-        console.log(`id of product: ${id}`);
-        console.log(`name of product: ${res[id].name}`);
-        console.log(`quantity of purchase: ${quantitySold}`);
-        console.log('----------------------------');
-        console.table(myTable);
-        myTable();
-
-
-
-    })
-}
