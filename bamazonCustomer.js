@@ -17,6 +17,7 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     //console.log('connected to sql with id: ' + connection.threadId);
+    
     // run the start function after the connection is made to prompt the user
     //where you call the first function -----
     console.log('\n  **  WELCOME TO BAMAZON  **\n');
@@ -35,6 +36,7 @@ function myTable() {
             newRow.id = element.id;
             newRow.name = element.name;
             newRow.price = element.price;
+            newRow.stock_quantity = element.stock_quantity;
             myTable.push(newRow);
         });
         console.table(myTable);
@@ -80,6 +82,7 @@ function start() {
                     //console.log('stock mysql '+res[0].stock_quantity);
                     // sends the statement if the order quantity is more then stock
                     if (answer.quantitySold > res[0].stock_quantity) {
+                        //prompts message that not enough items in stock
                         console.log('\n------------------------\n');
                         console.log("Insufficient quantity!");
                         console.log('the current stock for ' + res[0].name + ' is: ' +
@@ -89,18 +92,29 @@ function start() {
 
                         return start();
                     } else {
+                      
+                    //   connection.query(
+                      
+                    //     "UPDATE orders SET stock_quantity = ? WHERE id = ?", [
+                    //         res[0].stock_quantity - answer.quantitySold,
+                    //         answer.id],
+                            
+                    //         ()=>{})
 
                         connection.query(
-                            "UPDATE orders SET ? WHERE ?" [{
-                                    stock_quantity: answer.quantitySold
+
+                            "UPDATE orders SET ? WHERE ?", [{
+                                    stock_quantity: res[0].stock_quantity - answer.quantitySold
                                 },
                                 {
                                     id: answer.id
                                 }
                             ],
-                            function (error, res) {
+                            function (error) {
                                 if (error) throw err;
+
                                 // shows the order purchased
+
                                 console.log('\n----------------------------\n');
                                 console.log(`name: ${res[0].name}`);
                                 //console.log(`id of product: ${answer.id}`);
@@ -109,9 +123,11 @@ function start() {
                                 console.log('\n----------------------------\n');
 
                                 console.table(myTable);
+                                myTable();
+
                             });
-                        myTable();
                     }
+
                 })
             });
     });
