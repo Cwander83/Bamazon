@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     //console.log('connected to sql with id: ' + connection.threadId);
-    
+
     // run the start function after the connection is made to prompt the user
     //where you call the first function -----
     console.log('\n  **  WELCOME TO BAMAZON  **\n');
@@ -68,9 +68,7 @@ function start() {
                         if (isNaN(value) === false) {
                             return true;
                         }
-                        // else if (quantitySold < res[0].stock_quantity) {
-                        //     return console.log("Insufficient quantity!");
-                        // }
+                      
                         return console.log("not a proper number");;
                     }
                 }
@@ -79,7 +77,7 @@ function start() {
                 connection.query('SELECT name, stock_quantity, price FROM orders WHERE id = ?', [
                     answer.id
                 ], function (err, res) {
-                    //console.log('stock mysql '+res[0].stock_quantity);
+
                     // sends the statement if the order quantity is more then stock
                     if (answer.quantitySold > res[0].stock_quantity) {
                         //prompts message that not enough items in stock
@@ -91,43 +89,33 @@ function start() {
                         console.log('\n------------------------\n');
 
                         return start();
-                    } else {
-                      
-                    //   connection.query(
-                      
-                    //     "UPDATE orders SET stock_quantity = ? WHERE id = ?", [
-                    //         res[0].stock_quantity - answer.quantitySold,
-                    //         answer.id],
-                            
-                    //         ()=>{})
-
-                        connection.query(
-
-                            "UPDATE orders SET ? WHERE ?", [{
-                                    stock_quantity: res[0].stock_quantity - answer.quantitySold
-                                },
-                                {
-                                    id: answer.id
-                                }
-                            ],
-                            function (error) {
-                                if (error) throw err;
-
-                                // shows the order purchased
-
-                                console.log('\n----------------------------\n');
-                                console.log(`name: ${res[0].name}`);
-                                //console.log(`id of product: ${answer.id}`);
-                                console.log(`You have purchased: ${answer.quantitySold} unit`);
-                                console.log('total cost: $' + answer.quantitySold * res[0].price);
-                                console.log('\n----------------------------\n');
-
-                                console.table(myTable);
-                                myTable();
-
-                            });
                     }
 
+                    connection.query(
+
+                        "UPDATE orders SET ? WHERE ?", [{
+                                stock_quantity: res[0].stock_quantity - answer.quantitySold
+                            },
+                            {
+                                id: answer.id
+                            }
+                        ],
+                        function (error) {
+                            if (error) throw err;
+
+                            // shows the order purchased
+
+                            console.log('\n----------------------------\n');
+                            console.log(`name: ${res[0].name}`);
+                            //console.log(`id of product: ${answer.id}`);
+                            console.log(`You have purchased: ${answer.quantitySold} unit`);
+                            console.log('total cost: $' + answer.quantitySold * res[0].price);
+                            console.log('\n----------------------------\n');
+
+                            console.table(myTable);
+                            myTable();
+                            
+                        });
                 })
             });
     });
