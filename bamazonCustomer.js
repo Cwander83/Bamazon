@@ -100,9 +100,6 @@ function start() {
                             ],
                             function (error, res) {
                                 if (error) throw err;
-
-
-
                                 // shows the order purchased
                                 console.log('\n----------------------------\n');
                                 console.log(`name: ${res[0].name}`);
