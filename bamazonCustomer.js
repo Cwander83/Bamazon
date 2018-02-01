@@ -1,7 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-// call once somewhere in the beginning of the app
 const cTable = require('console.table');
+
 // create the connection information for the sql database
 var connection = mysql.createConnection({
     host: "localhost",
@@ -25,8 +25,7 @@ connection.connect(function (err) {
     myTable();
 
 });
-// 
-//
+// starts by showing the orders table 
 function myTable() {
     connection.query('SELECT * FROM orders', (err, res) => {
         const myTable = [];
@@ -41,12 +40,11 @@ function myTable() {
         });
         console.table(myTable);
     });
-    start();
+    
+    start();                //moves on to the store questions
 };
 
 function start() {
-    // console.log('\n  **  WELCOME TO BAMAZON  **\n');
-    // console.log('HOME OF ALL YOUR TERMINAL SHOPPING NEEDS\n');
     connection.query("SELECT * FROM orders WHERE stock_quantity > 0", (err, res) => {
         if (err) throw err;
 
@@ -68,7 +66,7 @@ function start() {
                         if (isNaN(value) === false) {
                             return true;
                         }
-                      
+
                         return console.log("not a proper number");;
                     }
                 }
@@ -90,9 +88,8 @@ function start() {
 
                         return start();
                     }
-
+                    // where the mySQL database table is updated and show order go through
                     connection.query(
-
                         "UPDATE orders SET ? WHERE ?", [{
                                 stock_quantity: res[0].stock_quantity - answer.quantitySold
                             },
@@ -102,19 +99,17 @@ function start() {
                         ],
                         function (error) {
                             if (error) throw err;
-
                             // shows the order purchased
-
                             console.log('\n----------------------------\n');
                             console.log(`name: ${res[0].name}`);
-                            //console.log(`id of product: ${answer.id}`);
                             console.log(`You have purchased: ${answer.quantitySold} unit`);
                             console.log('total cost: $' + answer.quantitySold * res[0].price);
                             console.log('\n----------------------------\n');
 
-                            console.table(myTable);
+                            console.table(myTable);     //shows the updated table
+                            // restarts the ordering process
                             myTable();
-                            
+
                         });
                 })
             });
